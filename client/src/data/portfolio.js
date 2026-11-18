@@ -13,32 +13,41 @@ export const socials = [
 ];
 
 export const stats = [
-  { value: '1+ yr', label: 'Full-time full-stack development' },
-  { value: '4', label: 'Internships across product & engineering' },
-  { value: 'MERN', label: 'MongoDB · Express · React · Node' },
-  { value: '1K+', label: 'Followers on LinkedIn' },
+  { value: '4', label: 'Production websites live' },
+  { value: '1+ yr', label: 'Full-time MERN development' },
+  { value: '3', label: 'Software development internships' },
+  { value: '3+ yrs', label: 'Total work experience since 2022' },
 ];
+
+export const education = {
+  degree: 'B.E. Mechatronics Engineering',
+  school: 'KSR College of Technology',
+  years: '2017 — 2021',
+  grade: 'CGPA 7.96',
+};
+
+export const resumeUrl = '/Rohinth_S_Resume.pdf';
 
 export const skills = [
   {
     group: 'Frontend', file: 'frontend.jsx', icon: 'layout', accent: '#38bdf8', span: 2,
     blurb: 'Interfaces people enjoy using, on every screen size.',
-    items: ['React.js', 'JavaScript (ES6+)', 'HTML5', 'CSS3', 'Tailwind CSS', 'Responsive Design'],
+    items: ['React.js', 'Redux', 'JavaScript (ES6+)', 'HTML5', 'CSS3', 'Tailwind CSS', 'Sass', 'Responsive Design'],
   },
   {
     group: 'Backend', file: 'server.js', icon: 'server', accent: '#22d3a6',
     blurb: 'Secure APIs and the logic behind them.',
-    items: ['Node.js', 'Express.js', 'REST APIs', 'Authentication'],
+    items: ['Node.js', 'Express.js', 'REST APIs', 'JWT Authentication'],
   },
   {
     group: 'Database', file: 'schema.js', icon: 'database', accent: '#a3e635',
     blurb: 'Data models that stay fast as apps grow.',
-    items: ['MongoDB', 'Mongoose', 'Data Modeling'],
+    items: ['MongoDB', 'Mongoose', 'MySQL', 'Data Modeling'],
   },
   {
     group: 'AI-assisted dev', file: 'prompt.md', icon: 'sparkles', accent: '#a48bff', span: 2,
     blurb: 'AI coding tools that help me ship faster without cutting corners.',
-    items: ['Claude Code', 'Claude Design', 'OpenAI Codex', 'Google Antigravity', 'Prompt Engineering'],
+    items: ['Claude Code', 'Claude Design', 'OpenAI Codex', 'Cursor', 'GitHub Copilot', 'ChatGPT', 'Google Antigravity', 'Prompt Engineering'],
   },
   {
     group: 'Tools', file: 'tools.sh', icon: 'wrench', accent: '#f5b84b',
@@ -57,28 +66,29 @@ export const experience = [
     title: 'Software Developer', company: 'Trueline Research', when: 'Aug 2025 — Present',
     loc: 'Salem, Tamil Nadu · On-site · Full-time', current: true,
     points: [
-      'Build end-to-end web applications on the MERN stack (MongoDB, Express.js, React.js, Node.js).',
-      'Design responsive user interfaces with React and Tailwind CSS.',
-      'Build secure REST APIs with Node.js and Express, and manage data with MongoDB.',
+      'Develop scalable MERN application modules and reusable UI components with React and Tailwind CSS.',
+      'Integrate secure REST APIs with JWT authentication, working with backend teams to improve code efficiency.',
+      'Built and maintain four live production websites for the company and its publishing brands.',
+      'Use AI tools (Copilot, ChatGPT, Cursor, Claude) to speed up development, debugging and documentation.',
     ],
   },
   {
     title: 'Software Engineer Intern', company: 'StartNet Ventures', when: 'May 2025 — Jul 2025',
     loc: 'Salem, Tamil Nadu · On-site · Internship',
     points: [
-      'Built and styled responsive web pages using HTML, CSS, JavaScript and React.js.',
-      'Turned design mockups into working front-end components.',
+      'Built interactive dashboard components and responsive UI screens with React and Tailwind CSS.',
+      'Helped with API integrations, testing and performance improvements using Postman.',
     ],
   },
   {
     title: 'Full Stack Development Intern', company: 'Cognifyz Technologies', when: 'Mar 2025 — Apr 2025',
     loc: 'Nagpur, Maharashtra · Remote · Internship',
-    points: ['Built responsive, scalable full-stack web applications with Node.js and modern front-end tooling.'],
+    points: ['Developed front-end pages with React Router and managed state with clean component-level logic.'],
   },
   {
-    title: 'Software Development Intern', company: 'Bluestock', when: 'Nov 2024 — Dec 2024',
+    title: 'Software Development Engineer Intern', company: 'Bluestock Fintech', when: 'Nov 2024 — Dec 2024',
     loc: 'Remote · Internship',
-    points: ['Built web features with HTML, CSS, JavaScript and Node.js.'],
+    points: ['Shipped production-ready UI enhancements and fixed critical UI bugs in an Agile (Scrum) team.'],
   },
   {
     title: 'Graduate Engineering Trainee', company: 'Nexteer Automotive', when: 'Mar 2024 — Jun 2024',

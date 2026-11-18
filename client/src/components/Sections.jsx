@@ -1,6 +1,6 @@
 import Section, { SectionHeading, Stagger } from './Section';
 import SpotlightCard from './SpotlightCard';
-import { experience, projects, stats } from '../data/portfolio';
+import { education, experience, projects, resumeUrl, stats } from '../data/portfolio';
 
 export function About() {
   return (
@@ -9,25 +9,45 @@ export function About() {
         <div className="eyebrow">// about</div>
         <h2>From the shop floor to the full stack</h2>
         <p>
-          I'm a Full Stack Developer who works on the whole MERN stack. At Trueline Research I build end-to-end web
-          applications. I design responsive interfaces with React and Tailwind CSS, build secure REST APIs with Node.js
-          and Express, and model backend data in MongoDB.
+          I'm a MERN stack developer at Trueline Research, where I build and run four live production websites. I design
+          responsive interfaces with React and Tailwind CSS, build secure REST APIs with Node.js, Express and JWT
+          authentication, and model data in MongoDB.
         </p>
         <p>
-          I began my career in manufacturing. At Ashok Leyland I worked on a robotic automation line, using Kaizen
-          improvements to raise reliability, and at Nexteer Automotive I managed purchasing, maintenance stores and capex
-          budgets. That's where I learned to think in systems, costs and real users. I then moved into software through
-          three development internships and have been building full-time ever since.
+          My path here was unusual. I studied Mechatronics, then worked on a robotic automation line at Ashok Leyland,
+          using Kaizen improvements to raise reliability, and managed purchasing and capex budgets at Nexteer Automotive.
+          That taught me to think in systems, costs and real users. I moved into software through three development
+          internships and have been building full-time ever since.
         </p>
+        <p className="looking">
+          <span className="dot" /> Looking for a full-stack role on a product team, where I can own features end to end.
+          Available to join immediately and open to relocating.
+        </p>
+        <div className="about-ctas">
+          <a className="btn primary" href={resumeUrl} target="_blank" rel="noreferrer">Download résumé ↓</a>
+          <a className="btn ghost" href="#contact">Get in touch</a>
+        </div>
       </div>
-      <Stagger className="stats">
-        {stats.map((s) => (
-          <SpotlightCard key={s.label} className="stat">
-            <b>{s.value}</b>
-            <span>{s.label}</span>
-          </SpotlightCard>
-        ))}
-      </Stagger>
+      <div className="about-side">
+        <Stagger className="stats">
+          {stats.map((s) => (
+            <SpotlightCard key={s.label} className="stat">
+              <b>{s.value}</b>
+              <span>{s.label}</span>
+            </SpotlightCard>
+          ))}
+        </Stagger>
+        <SpotlightCard className="edu">
+          <div className="edu-icon" aria-hidden="true">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round"><path d="M2 9l10-5 10 5-10 5z" /><path d="M6 11v5c0 1.5 2.7 3 6 3s6-1.5 6-3v-5" /><path d="M22 9v6" /></svg>
+          </div>
+          <div>
+            <div className="edu-label">education</div>
+            <h3>{education.degree}</h3>
+            <p>{education.school} · {education.years} · {education.grade}</p>
+          </div>
+        </SpotlightCard>
+      </div>
     </Section>
   );
 }

@@ -1,6 +1,6 @@
 import { useCallback, useEffect, useState } from 'react';
 import CharacterHero from './CharacterHero';
-import { profile, socials } from '../data/portfolio';
+import { profile, resumeUrl, socials } from '../data/portfolio';
 import { prefersReducedMotion } from '../hooks/useReveal';
 import Icon from './Icons';
 
@@ -70,11 +70,12 @@ export default function Hero() {
           </p>
           <div className="ctas enter" style={d(0.42)}>
             <a className="btn primary" href="#projects">View my work →</a>
+            <a className="btn ghost" href={resumeUrl} target="_blank" rel="noreferrer">Résumé ↓</a>
             <a className="btn ghost" href="#contact">Get in touch</a>
           </div>
           <div className="meta enter" style={d(0.54)}>
             <span>📍 {profile.location}</span>
-            <span>💼 1+ yr full-time · 4 internships</span>
+            <span>💼 1+ yr full-time · 3 dev internships</span>
           </div>
           <div className="hero-socials enter" style={d(0.66)}>
             {socials.map((s) => (

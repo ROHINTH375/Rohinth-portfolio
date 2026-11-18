@@ -275,3 +275,18 @@
 .reveal.in .stagger .chip{opacity:1;transform:none;transition:opacity .4s ease calc(.35s + var(--i) * 60ms),transform .4s cubic-bezier(.2,.7,.2,1) calc(.35s + var(--i) * 60ms),background .2s,border-color .2s,color .2s}
 .reveal.in .stagger .chip:hover{transform:translateY(-2px)}
 @media (prefers-reduced-motion: reduce){.marquee-track{animation:none}.stagger .chip{opacity:1!important;transform:none!important}}
+
+/* ---------- about extras ---------- */
+.about-grid p.looking{display:flex;gap:12px;align-items:flex-start;font-size:15px;color:#d6dbe7;background:rgba(34,211,166,.06);
+  border:1px solid rgba(34,211,166,.22);border-radius:12px;padding:14px 16px;margin-top:6px}
+.looking .dot{flex:none;margin-top:8px}
+.about-ctas{display:flex;gap:12px;flex-wrap:wrap;margin-top:22px}
+.about-side{display:grid;gap:14px;align-content:start}
+.edu{display:flex;gap:16px;align-items:center;background:var(--card);border:1px solid var(--line);border-radius:14px;padding:20px 22px}
+.edu-icon{flex:none;width:46px;height:46px;border-radius:12px;display:grid;place-items:center;color:#a48bff;
+  background:rgba(124,92,255,.12);border:1px solid rgba(124,92,255,.3)}
+.edu-icon svg{width:22px;height:22px}
+.edu-label{font-family:var(--mono);font-size:12px;color:var(--accent2);margin-bottom:2px}
+.edu h3{font-size:17px;font-weight:700}
+.edu p{font-size:14px;color:var(--muted);margin:2px 0 0!important}
+h2{text-wrap:balance;line-height:1.15}
