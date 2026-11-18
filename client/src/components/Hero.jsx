@@ -52,9 +52,10 @@ export default function Hero() {
   const [hasCharacter, setHasCharacter] = useState(true);
   const noCharacter = useCallback(() => setHasCharacter(false), []);
   return (
-    <header className="hero" id="top">
+    <header className={`hero ${hasCharacter ? 'hero-full' : ''}`} id="top">
+      {hasCharacter && <CharacterHero onUnavailable={noCharacter} />}
       <div className="wrap hero-grid">
-        <div>
+        <div className="hero-copy">
           <div className="status enter" style={d(0.05)}>
             <span className="dot" />
             {profile.status}
@@ -84,7 +85,7 @@ export default function Hero() {
             ))}
           </div>
         </div>
-        {hasCharacter ? <CharacterHero onUnavailable={noCharacter} /> : <Terminal />}
+        {!hasCharacter && <Terminal />}
       </div>
     </header>
   );
