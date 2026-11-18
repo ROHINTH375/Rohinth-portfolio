@@ -33,7 +33,7 @@ export default function Navbar() {
       <nav className={scrolled ? 'scrolled' : ''}>
         <div className="wrap">
           <a href="#top" className="logo">
-            rohinth<span>.dev</span>
+            rohinth<span>_portfolio</span>
           </a>
           <div className="links">
             {links.map((id) => (
