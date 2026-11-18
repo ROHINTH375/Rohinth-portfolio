@@ -1,4 +1,5 @@
-import { useEffect, useState } from 'react';
+import { useCallback, useEffect, useState } from 'react';
+import CharacterHero from './CharacterHero';
 import { profile, socials } from '../data/portfolio';
 import { prefersReducedMotion } from '../hooks/useReveal';
 import Icon from './Icons';
@@ -47,6 +48,9 @@ function Terminal() {
 
 export default function Hero() {
   const d = (s) => ({ animationDelay: `${s}s` });
+  // Show the interactive character when its frames exist; otherwise fall back to the terminal.
+  const [hasCharacter, setHasCharacter] = useState(true);
+  const noCharacter = useCallback(() => setHasCharacter(false), []);
   return (
     <header className="hero" id="top">
       <div className="wrap hero-grid">
@@ -80,7 +84,7 @@ export default function Hero() {
             ))}
           </div>
         </div>
-        <Terminal />
+        {hasCharacter ? <CharacterHero onUnavailable={noCharacter} /> : <Terminal />}
       </div>
     </header>
   );
