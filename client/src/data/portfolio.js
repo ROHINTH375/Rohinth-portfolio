@@ -20,12 +20,36 @@ export const stats = [
 ];
 
 export const skills = [
-  { group: 'frontend', items: ['React.js', 'JavaScript (ES6+)', 'HTML5', 'CSS3', 'Tailwind CSS', 'Responsive Design'] },
-  { group: 'backend', items: ['Node.js', 'Express.js', 'REST APIs', 'Authentication'] },
-  { group: 'database', items: ['MongoDB', 'Mongoose', 'Data Modeling'] },
-  { group: 'tools', items: ['Git', 'GitHub', 'VS Code', 'Postman'] },
-  { group: 'deployment', items: ['Vercel', 'Netlify', 'Render', 'Coolify'] },
-  { group: 'ai-assisted dev', items: ['Claude Code', 'Claude Design', 'OpenAI Codex', 'Google Antigravity', 'Prompt Engineering'] },
+  {
+    group: 'Frontend', file: 'frontend.jsx', icon: 'layout', accent: '#38bdf8', span: 2,
+    blurb: 'Interfaces people enjoy using, on every screen size.',
+    items: ['React.js', 'JavaScript (ES6+)', 'HTML5', 'CSS3', 'Tailwind CSS', 'Responsive Design'],
+  },
+  {
+    group: 'Backend', file: 'server.js', icon: 'server', accent: '#22d3a6',
+    blurb: 'Secure APIs and the logic behind them.',
+    items: ['Node.js', 'Express.js', 'REST APIs', 'Authentication'],
+  },
+  {
+    group: 'Database', file: 'schema.js', icon: 'database', accent: '#a3e635',
+    blurb: 'Data models that stay fast as apps grow.',
+    items: ['MongoDB', 'Mongoose', 'Data Modeling'],
+  },
+  {
+    group: 'AI-assisted dev', file: 'prompt.md', icon: 'sparkles', accent: '#a48bff', span: 2,
+    blurb: 'AI coding tools that help me ship faster without cutting corners.',
+    items: ['Claude Code', 'Claude Design', 'OpenAI Codex', 'Google Antigravity', 'Prompt Engineering'],
+  },
+  {
+    group: 'Tools', file: 'tools.sh', icon: 'wrench', accent: '#f5b84b',
+    blurb: 'The everyday workbench.',
+    items: ['Git', 'GitHub', 'VS Code', 'Postman'],
+  },
+  {
+    group: 'Deployment', file: 'deploy.yml', icon: 'rocket', accent: '#f472b6', span: 2,
+    blurb: 'From git push to a live URL.',
+    items: ['Vercel', 'Netlify', 'Render', 'Coolify'],
+  },
 ];
 
 export const experience = [

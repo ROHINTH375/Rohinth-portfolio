@@ -1,6 +1,6 @@
 import Section, { SectionHeading, Stagger } from './Section';
 import SpotlightCard from './SpotlightCard';
-import { experience, projects, skills, stats } from '../data/portfolio';
+import { experience, projects, stats } from '../data/portfolio';
 
 export function About() {
   return (
@@ -25,30 +25,6 @@ export function About() {
           <SpotlightCard key={s.label} className="stat">
             <b>{s.value}</b>
             <span>{s.label}</span>
-          </SpotlightCard>
-        ))}
-      </Stagger>
-    </Section>
-  );
-}
-
-export function Skills() {
-  return (
-    <Section id="skills">
-      <SectionHeading
-        eyebrow="skills"
-        title="What I work with"
-        sub="The tools I use every day to take a feature from mockup to deployed product, with AI coding tools to move faster."
-      />
-      <Stagger className="skills">
-        {skills.map((g) => (
-          <SpotlightCard key={g.group} className="skill-card">
-            <h3>{g.group}</h3>
-            <div className="tags">
-              {g.items.map((t) => (
-                <span key={t} className="tag">{t}</span>
-              ))}
-            </div>
           </SpotlightCard>
         ))}
       </Stagger>
