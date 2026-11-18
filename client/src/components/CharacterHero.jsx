@@ -185,7 +185,9 @@ export default function CharacterHero({ onUnavailable }) {
 
   return (
     <div className={`character enter ${ready ? 'is-ready' : ''}`} style={{ animationDelay: '.35s' }}>
-      <canvas ref={canvasRef} aria-label="Animated character of Rohinth that reacts to your cursor" role="img" />
+      <div className="character-frame">
+        <canvas ref={canvasRef} aria-label="Animated character of Rohinth that reacts to your cursor" role="img" />
+      </div>
       <div className="character-hint">move your cursor ↔ · hover the centre to say hi</div>
     </div>
   );

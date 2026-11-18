@@ -1,0 +1,11 @@
+{
+  "count": 119,
+  "fps": 15,
+  "pattern": "frame_%04d.webp",
+  "segments": {
+    "idleEnd": 2.9,
+    "lookLeft": 3.25,
+    "lookRight": 5.2,
+    "greetStart": 5.9
+  }
+}
