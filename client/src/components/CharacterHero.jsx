@@ -16,12 +16,11 @@ import { prefersReducedMotion } from '../hooks/useReveal';
   }
 
   Behaviour
-  - Cursor in the left third  → plays to the "look left" frame and holds.
-  - Cursor in the right third → plays to the "look right" frame and holds.
-  - Cursor in the centre for a moment (or a tap/click) → plays the greeting once and holds the last frame.
-  - Otherwise → gently loops the working/idle frames.
-  - Phones/tablets (no mouse): the greeting plays once when the hero is visible.
-  - Reduced motion: no idle loop; the cursor still controls it.
+  - Cursor left of the character  → looks left.  Right of it → looks right.
+  - Cursor over the character     → notices you and greets; goes back to typing when you leave.
+  - Cursor still for 3 s          → goes back to typing.
+  - Phones/tablets (no mouse): greets once when visible; tap toggles.
+  - Reduced motion: no idle typing loop; the cursor still controls it.
 */
 
 const pad = (n, w) => String(n).padStart(w, '0');
@@ -33,7 +32,7 @@ export default function CharacterHero({ onUnavailable }) {
   const [ready, setReady] = useState(false);
   const state = useRef({
     cfg: null, imgs: [], cur: 0, target: 0, mode: 'idle', idleDir: 1,
-    greeted: false, centreSince: 0, last: 0, raf: 0,
+    last: 0, raf: 0,
   });
 
   // Load config + frames
@@ -89,6 +88,8 @@ export default function CharacterHero({ onUnavailable }) {
     const ctx = canvas.getContext('2d');
     const reduce = prefersReducedMotion();
     const step = 1000 / cfg.fps;
+    // Any mouse/trackpad → cursor control. Devices without one (phones) greet once when visible; tap toggles.
+    const hasMouse = window.matchMedia('(any-pointer: fine)').matches;
 
     const draw = (i) => {
       const img = s.imgs[i];
@@ -102,95 +103,119 @@ export default function CharacterHero({ onUnavailable }) {
       return true;
     };
 
+    // ---- behaviour, relative to where the character is on screen ----
+    //  cursor left of the card   → looks left
+    //  cursor right of the card  → looks right
+    //  cursor over the card      → greets (holds while you stay), goes back to work when you leave
+    //  cursor still for 3 s      → goes back to typing
+    const pointer = { x: -1, y: -1, movedAt: 0, inside: false };
+    let hoverSince = 0;
+
     const greet = () => {
-      if (s.greeted) return;
-      s.greeted = true;
       s.mode = 'greet';
       s.target = cfg.idx.end;
+    };
+    const ungreet = () => {
+      s.mode = 'idle';
+    };
+
+    const decide = (now) => {
+      if (pointer.x < 0) return;
+      const r = canvas.getBoundingClientRect();
+      const pad = 24;
+      const over =
+        pointer.inside &&
+        pointer.x >= r.left - pad && pointer.x <= r.right + pad &&
+        pointer.y >= r.top - pad && pointer.y <= r.bottom + pad;
+
+      if (over) {
+        if (!hoverSince) hoverSince = now;
+        if (s.mode !== 'greet' && now - hoverSince > 250) greet();
+        return;
+      }
+      hoverSince = 0;
+      if (!pointer.inside || now - pointer.movedAt > 3000) {
+        s.mode = 'idle';
+        return;
+      }
+      if (pointer.x < r.left) {
+        s.mode = 'left';
+        s.target = cfg.idx.left;
+      } else if (pointer.x > r.right) {
+        s.mode = 'right';
+        s.target = cfg.idx.right;
+      } else {
+        s.mode = 'idle'; // directly above/below the card
+      }
     };
 
     const tick = (t) => {
       s.raf = requestAnimationFrame(tick);
+      if (hasMouse) decide(t);
       if (t - s.last < step) return;
       s.last = t;
 
       const prev = s.cur;
-      if (s.mode === 'idle' && reduce) {
-        // reduced motion: no idle loop, just rest on the first frame
-        if (s.cur > 0) s.cur -= Math.max(1, Math.ceil(s.cur / 5));
-      } else if (s.mode === 'idle') {
-        // ping-pong through the working frames
-        let next = s.cur + s.idleDir;
-        if (s.cur > cfg.idx.idleEnd) next = Math.max(cfg.idx.idleEnd, s.cur - Math.max(1, Math.ceil((s.cur - cfg.idx.idleEnd) / 5))); // coming back from a look
-        else if (next > cfg.idx.idleEnd || next < 0) {
-          s.idleDir *= -1;
-          next = s.cur + s.idleDir;
+      if (s.mode === 'idle') {
+        if (s.cur > cfg.idx.idleEnd) {
+          // coming back from a look or the greeting: rewind quickly
+          s.cur = Math.max(cfg.idx.idleEnd, s.cur - Math.max(1, Math.ceil((s.cur - cfg.idx.idleEnd) / 4)));
+        } else if (reduce) {
+          s.cur = Math.max(0, s.cur - Math.max(1, Math.ceil(s.cur / 4)));
+        } else {
+          // ping-pong through the typing frames
+          let next = s.cur + s.idleDir;
+          if (next > cfg.idx.idleEnd || next < 0) {
+            s.idleDir *= -1;
+            next = s.cur + s.idleDir;
+          }
+          s.cur = Math.max(0, next);
         }
-        s.cur = Math.max(0, next);
       } else if (s.cur !== s.target) {
         const dist = Math.abs(s.target - s.cur);
-        let speed;
-        if (s.mode === 'greet') {
-          // hurry through the look-around frames, then play the greeting at natural speed
-          speed = s.cur < cfg.idx.greetStart ? 4 : 1;
-        } else {
-          // follow the cursor quickly: big jumps when far away, easing in as it arrives
-          speed = Math.max(1, Math.min(6, Math.ceil(dist / 5)));
-        }
+        const speed =
+          s.mode === 'greet'
+            ? s.cur < cfg.idx.greetStart ? 5 : 1 // rush to the greeting, then natural speed
+            : Math.max(1, Math.min(6, Math.ceil(dist / 4))); // follow the cursor fast
         s.cur += Math.sign(s.target - s.cur) * Math.min(speed, dist);
       }
-
-      // Centre dwell triggers the greeting
-      if (!s.greeted && s.mode === 'centre' && s.centreSince && t - s.centreSince > 450) greet();
 
       if (!draw(s.cur)) s.cur = prev; // frame not loaded yet: hold the previous one
     };
 
     const onMove = (e) => {
-      if (s.greeted) return;
-      const x = e.clientX / window.innerWidth;
-      if (x < 0.36) {
-        s.mode = 'left';
-        s.target = cfg.idx.left;
-        s.centreSince = 0;
-      } else if (x > 0.64) {
-        s.mode = 'right';
-        s.target = cfg.idx.right;
-        s.centreSince = 0;
-      } else {
-        if (s.mode !== 'centre') s.centreSince = performance.now();
-        s.mode = 'centre';
-        s.target = s.cur;
-      }
+      pointer.x = e.clientX;
+      pointer.y = e.clientY;
+      pointer.movedAt = performance.now();
+      pointer.inside = true;
     };
     const onLeave = () => {
-      if (!s.greeted) {
-        s.mode = 'idle';
-        s.centreSince = 0;
-      }
+      pointer.inside = false;
     };
+    const onTap = () => (s.mode === 'greet' ? ungreet() : greet());
 
     draw(0);
-    // Any mouse/trackpad → cursor control. Only devices with no fine pointer (phones) auto-greet.
-    const hasMouse = window.matchMedia('(any-pointer: fine)').matches;
     let io;
     if (!hasMouse) {
       io = new IntersectionObserver(([en]) => {
-        if (en.isIntersecting) setTimeout(greet, 900);
+        if (en.isIntersecting) {
+          setTimeout(greet, 900);
+          io.disconnect();
+        }
       }, { threshold: 0.5 });
       io.observe(canvas);
+      canvas.addEventListener('click', onTap);
     } else {
       window.addEventListener('mousemove', onMove, { passive: true });
-      document.addEventListener('mouseleave', onLeave);
+      document.documentElement.addEventListener('mouseleave', onLeave);
     }
-    canvas.addEventListener('click', greet);
     s.raf = requestAnimationFrame(tick);
 
     return () => {
       cancelAnimationFrame(s.raf);
       window.removeEventListener('mousemove', onMove);
-      document.removeEventListener('mouseleave', onLeave);
-      canvas.removeEventListener('click', greet);
+      document.documentElement.removeEventListener('mouseleave', onLeave);
+      canvas.removeEventListener('click', onTap);
       io?.disconnect();
     };
   }, [ready]);
@@ -200,7 +225,7 @@ export default function CharacterHero({ onUnavailable }) {
       <div className="character-frame">
         <canvas ref={canvasRef} aria-label="Animated character of Rohinth that reacts to your cursor" role="img" />
       </div>
-      <div className="character-hint">move your cursor ↔ · hover the centre to say hi</div>
+      <div className="character-hint">move your cursor around · hover over me to say hi</div>
     </div>
   );
 }
