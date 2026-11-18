@@ -206,4 +206,4 @@
 .character.is-ready canvas{opacity:1}
 .character-hint{margin-top:12px;font-family:var(--mono);font-size:12px;color:var(--muted);opacity:0;transition:opacity .6s .4s}
 .character.is-ready .character-hint{opacity:.8}
-@media(hover:none){.character-hint{display:none}}
+@media not (any-pointer: fine){.character-hint{display:none}}

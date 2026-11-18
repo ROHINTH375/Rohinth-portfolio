@@ -20,7 +20,8 @@ import { prefersReducedMotion } from '../hooks/useReveal';
   - Cursor in the right third → plays to the "look right" frame and holds.
   - Cursor in the centre for a moment (or a tap/click) → plays the greeting once and holds the last frame.
   - Otherwise → gently loops the working/idle frames.
-  - Touch devices and reduced motion: the greeting plays once when the hero is visible.
+  - Phones/tablets (no mouse): the greeting plays once when the hero is visible.
+  - Reduced motion: no idle loop; the cursor still controls it.
 */
 
 const pad = (n, w) => String(n).padStart(w, '0');
@@ -114,19 +115,29 @@ export default function CharacterHero({ onUnavailable }) {
       s.last = t;
 
       const prev = s.cur;
-      if (s.mode === 'idle') {
+      if (s.mode === 'idle' && reduce) {
+        // reduced motion: no idle loop, just rest on the first frame
+        if (s.cur > 0) s.cur -= Math.max(1, Math.ceil(s.cur / 5));
+      } else if (s.mode === 'idle') {
         // ping-pong through the working frames
         let next = s.cur + s.idleDir;
-        if (s.cur > cfg.idx.idleEnd) next = s.cur - 1; // coming back from a look
+        if (s.cur > cfg.idx.idleEnd) next = Math.max(cfg.idx.idleEnd, s.cur - Math.max(1, Math.ceil((s.cur - cfg.idx.idleEnd) / 5))); // coming back from a look
         else if (next > cfg.idx.idleEnd || next < 0) {
           s.idleDir *= -1;
           next = s.cur + s.idleDir;
         }
         s.cur = Math.max(0, next);
       } else if (s.cur !== s.target) {
-        // while greeting, hurry through the look-around frames
-        const fast = s.mode === 'greet' && s.cur < cfg.idx.greetStart ? 2 : 1;
-        s.cur += s.cur < s.target ? Math.min(fast, s.target - s.cur) : -1;
+        const dist = Math.abs(s.target - s.cur);
+        let speed;
+        if (s.mode === 'greet') {
+          // hurry through the look-around frames, then play the greeting at natural speed
+          speed = s.cur < cfg.idx.greetStart ? 4 : 1;
+        } else {
+          // follow the cursor quickly: big jumps when far away, easing in as it arrives
+          speed = Math.max(1, Math.min(6, Math.ceil(dist / 5)));
+        }
+        s.cur += Math.sign(s.target - s.cur) * Math.min(speed, dist);
       }
 
       // Centre dwell triggers the greeting
@@ -160,9 +171,10 @@ export default function CharacterHero({ onUnavailable }) {
     };
 
     draw(0);
-    const touch = window.matchMedia('(hover: none)').matches;
+    // Any mouse/trackpad → cursor control. Only devices with no fine pointer (phones) auto-greet.
+    const hasMouse = window.matchMedia('(any-pointer: fine)').matches;
     let io;
-    if (touch || reduce) {
+    if (!hasMouse) {
       io = new IntersectionObserver(([en]) => {
         if (en.isIntersecting) setTimeout(greet, 900);
       }, { threshold: 0.5 });
